@@ -1,6 +1,10 @@
 import React from 'react';
-import { Container } from './styles/map';
+import { Container, Map } from './styles/map';
 
-export default function Map({ children, ...restProps }) {
+export default function RouteMap({ children, ...restProps }) {
   return <Container {...restProps}>{children}</Container>;
 }
+
+RouteMap.Map = function RouteMapMap({ children, ...restProps }) {
+  return <Map {...restProps}>{children}</Map>;
+};
