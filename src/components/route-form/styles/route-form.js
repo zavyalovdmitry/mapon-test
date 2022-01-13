@@ -6,10 +6,8 @@ export const Form = styled.form`
   background: #ffffff;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08), 0px 2px 14px rgba(0, 0, 0, 0.06);
   border-radius: 3px 3px 0 0;
-
   display: flex;
   flex-wrap: wrap;
-
   box-sizing: border-box;
 `;
 
@@ -18,7 +16,7 @@ export const Title = styled.h1`
   font-size: 24px;
   line-height: 28px;
   color: #384045;
-
+  margin-top: 5px;
   width: 100%;
 `;
 
@@ -27,7 +25,6 @@ export const Text = styled.p`
   font-size: 14px;
   line-height: 19px;
   color: #384045;
-
   width: 30%;
 
   &:first-of-type:after {
@@ -45,10 +42,8 @@ export const Select = styled.select`
   border: 1px solid #dcdee0;
   box-sizing: border-box;
   border-radius: 3px;
-
   width: 380px;
   height: 32px;
-
   font-family: MuseoSansCyrl-300;
   font-size: 14px;
   line-height: 19px;
@@ -60,10 +55,8 @@ export const Date = styled.input`
   border: 1px solid #dcdee0;
   box-sizing: border-box;
   border-radius: 3px;
-
   width: 186px;
   height: 32px;
-
   font-family: MuseoSansCyrl-300;
   font-size: 14px;
   line-height: 19px;

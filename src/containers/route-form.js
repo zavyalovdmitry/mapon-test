@@ -1,10 +1,60 @@
+/* eslint-disable prefer-template */
 /* eslint-disable import/no-duplicates */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { RouteForm } from '../components';
 
 export function RouteFormContainer() {
-  const [vehicle, setVehicle] = useState(['Volvo', 'Saab', 'Opel', 'Audi']);
-  // const [currentVehicle, setCurrentVehicle] = useState(1);
+  const dispatch = useDispatch();
+  const vehicle = useSelector((state) => state.carData);
+  const [currentVehicle, setCurrentVehicle] = useState(0);
+
+  function formatDate(dateIso) {
+    const date = new Date(dateIso);
+    return (
+      date.getFullYear() +
+      '-' +
+      ('0' + (date.getMonth() + 1).toString()).slice(-2) +
+      '-' +
+      ('0' + date.getDate().toString()).slice(-2)
+    );
+  }
+  // +date comparing
+  const [tripStart, setTripStart] = useState(
+    formatDate(vehicle[currentVehicle].last_update)
+  );
+  const [tripEnd, setTripEnd] = useState(
+    formatDate(vehicle[currentVehicle].last_update)
+  );
+
+  function currentVehicleHandle(e) {
+    setCurrentVehicle(e.target.value);
+
+    dispatch({
+      type: 'updateCurrentUnitId',
+      unitId: vehicle[e.target.value].unit_id,
+    });
+  }
+
+  function tripStartHandle(e) {
+    setTripStart(e.target.value);
+
+    dispatch({
+      type: 'updateCurrentTripStart',
+      tripStart: e.target.value,
+    });
+  }
+
+  function tripEndHandle(e) {
+    setTripEnd(e.target.value);
+
+    dispatch({
+      type: 'updateCurrentTripEnd',
+      tripEnd: e.target.value,
+    });
+  }
+
+  function getRouteData() {}
 
   return (
     <>
@@ -12,16 +62,13 @@ export function RouteFormContainer() {
         <RouteForm.Title>Route report</RouteForm.Title>
         <RouteForm.Text>Vehicle number</RouteForm.Text>
         <RouteForm.Select
-          // type="text"
           id="vehicle"
-          // name="vehicle"
           placeHolder="Select vehicle"
-          // value={vehicle[currentVehicle]}
-          // onChange={(e) => setCurrentVehicle(e.target.value)}
+          onChange={(e) => currentVehicleHandle(e)}
         >
-          {vehicle.map((item) => (
-            <option key={item} value={item}>
-              {item}
+          {vehicle.map((item, index) => (
+            <option key={item.unit_id} value={index}>
+              {item.number}
             </option>
           ))}
         </RouteForm.Select>
@@ -32,17 +79,19 @@ export function RouteFormContainer() {
           type="date"
           id="start"
           name="trip-start"
-          value="2018-07-22"
-          min="2018-01-01"
-          max="2018-12-31"
+          value={tripStart}
+          min={formatDate(vehicle[currentVehicle].created_at)}
+          max={formatDate(vehicle[currentVehicle].last_update)}
+          onChange={(e) => tripStartHandle(e)}
         />
         <RouteForm.Date
           type="date"
           id="end"
           name="trip-end"
-          value="2018-07-22"
-          min="2018-01-01"
-          max="2018-12-31"
+          value={tripEnd}
+          min={formatDate(vehicle[currentVehicle].created_at)}
+          max={formatDate(vehicle[currentVehicle].last_update)}
+          onChange={(e) => tripEndHandle(e)}
         />
       </RouteForm>
     </>

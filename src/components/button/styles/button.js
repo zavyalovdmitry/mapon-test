@@ -3,7 +3,6 @@ import styled from 'styled-components/macro';
 export const Container = styled.div`
   height: 64px;
   width: 600px;
-
   background: #f4f4f4;
   border-radius: 0px 0px 3px 3px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08), 0px 2px 14px rgba(0, 0, 0, 0.06);
@@ -28,4 +27,18 @@ export const Link = styled.a`
   line-height: 16px;
   text-transform: uppercase;
   color: #ffffff;
+  cursor: pointer;
+  transition: 0.5s;
+  box-sizing: border-box;
+
+  &:hover {
+    opacity: 0.8;
+    transition: 0.5s;
+  }
+
+  &:active {
+    transition: 0s;
+    background: #ffffff;
+    color: #98ca02;
+  }
 `;

@@ -1,18 +1,13 @@
 import React from 'react';
-import { HeaderContainer } from './containers/header';
-import { RouteFormContainer } from './containers/route-form';
-import { MapContainer } from './containers/map';
-import { StatsContainer } from './containers/stats';
-import { ButtonContainer } from './containers/button';
+import { Provider } from 'react-redux';
+
+import { store } from './store';
+import { Home } from './pages/home';
 
 export default function App() {
   return (
-    <>
-      <HeaderContainer />
-      <RouteFormContainer />
-      <MapContainer />
-      <StatsContainer />
-      <ButtonContainer />
-    </>
+    <Provider store={store}>
+      <Home />
+    </Provider>
   );
 }
