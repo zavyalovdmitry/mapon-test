@@ -20,6 +20,8 @@ const INITIAL_STATE = {
   unitId: 0,
   tripStart: 0,
   tripEnd: 0,
+  routePath: 0,
+  pathKm: 0,
 };
 
 // https://mapon.com/api/v1/route/list.json?key=ed6dc5516f66531096e66628e84d10fd2371c87a&unit_id[]=71507&include[]=decoded_route&from[]=2021-10-19&till[]=2022-01-12
@@ -50,6 +52,26 @@ const reducer = (state, action) => {
       return {
         ...state,
         tripEnd: action.tripEnd,
+      };
+    case 'updateRoutePath':
+      return {
+        ...state,
+        routePath: action.routePath,
+      };
+    case 'updatePathKm':
+      return {
+        ...state,
+        pathKm: action.pathKm,
+      };
+    case 'updateTimeDrove':
+      return {
+        ...state,
+        timeDrove: action.timeDrove,
+      };
+    case 'updateTimeMean':
+      return {
+        ...state,
+        timeMean: action.timeMean,
       };
     default:
       return state;
