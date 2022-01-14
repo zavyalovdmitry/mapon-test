@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
-import { GoogleMap, LoadScript, Polyline } from '@react-google-maps/api';
+import {
+  GoogleMap,
+  LoadScript,
+  Polyline,
+  Marker,
+} from '@react-google-maps/api';
+import { useSelector } from 'react-redux';
 // import GoogleMapReact from 'google-map-react';
 // import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import { RouteMap } from '../components';
 // import dummap from '../dummap.png';
 import { googleMapsApiKey } from '../lib/api';
+import pin from '../pin.png';
 
 export function MapContainer() {
-  const [path, setPath] = useState([
-    { lat: 37.772, lng: -122.214 },
-    { lat: 21.291, lng: -157.821 },
-    { lat: -18.142, lng: 178.431 },
-    { lat: -27.467, lng: 153.027 },
-  ]);
+  const path = useSelector((state) => state.routePathCoordinates);
+
+  const centerLat =
+    path.reduce((accum, next) => accum + next.lat, 0) / path.length;
+  const centerLng =
+    path.reduce((accum, next) => accum + next.lng, 0) / path.length;
 
   const containerStyle = {
     width: '600px',
@@ -20,14 +27,22 @@ export function MapContainer() {
   };
 
   const center = {
-    lat: 0,
-    lng: -180,
+    lat: centerLat,
+    lng: centerLng,
   };
 
-  const options = {
-    strokeColor: '#FF0000',
+  const mapOptions = {
+    zoomControl: false,
+    scaleControl: false,
+    streetViewControl: false,
+    mapTypeControl: false,
+    fullscreenControl: false,
+  };
+
+  const polylineOptions = {
+    strokeColor: '#39B0FA',
     strokeOpacity: 0.8,
-    strokeWeight: 2,
+    strokeWeight: 4,
     fillColor: '#FF0000',
     fillOpacity: 0.35,
     clickable: false,
@@ -38,6 +53,9 @@ export function MapContainer() {
     zIndex: 1,
   };
 
+  const markerStartPosition = path[0];
+  const markerEndPosition = path[path.length - 1];
+
   return (
     <RouteMap>
       {/* <RouteMap.Map src={dummap} /> */}
@@ -46,11 +64,12 @@ export function MapContainer() {
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
-            zoom={1}
-            // zoomControl={false}
-            // scaleControl={false}
+            zoom={10}
+            options={mapOptions}
           >
-            <Polyline path={path} options={options} />
+            <Polyline path={path} options={polylineOptions} />
+            <Marker position={markerStartPosition} icon={pin} />
+            <Marker position={markerEndPosition} icon={pin} />
           </GoogleMap>
         </LoadScript>
       </RouteMap.Map>

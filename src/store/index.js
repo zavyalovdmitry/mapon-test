@@ -22,6 +22,7 @@ const INITIAL_STATE = {
   tripEnd: 0,
   routePath: 0,
   pathKm: 0,
+  routeDataLoadedStatus: false,
 };
 
 // https://mapon.com/api/v1/route/list.json?key=ed6dc5516f66531096e66628e84d10fd2371c87a&unit_id[]=71507&include[]=decoded_route&from[]=2021-10-19&till[]=2022-01-12
@@ -73,6 +74,17 @@ const reducer = (state, action) => {
         ...state,
         timeMean: action.timeMean,
       };
+    case 'updateRoutePathCoordinates':
+      return {
+        ...state,
+        routePathCoordinates: action.routePathCoordinates,
+      };
+    case 'updateRouteDataLoadedStatus':
+      return {
+        ...state,
+        routeDataLoadedStatus: action.routeDataLoadedStatus,
+      };
+
     default:
       return state;
   }

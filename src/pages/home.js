@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { HeaderContainer } from '../containers/header';
 import { RouteFormContainer } from '../containers/route-form';
 import { MapContainer } from '../containers/map';
@@ -10,6 +10,7 @@ import { carDataApi } from '../lib/api';
 
 export function Home() {
   const [carDataLoaded, setCarDataLoaded] = useState(false);
+  const { routeDataLoadedStatus } = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,8 +32,12 @@ export function Home() {
     <>
       <HeaderContainer />
       <RouteFormContainer />
-      <MapContainer />
-      <StatsContainer />
+      {routeDataLoadedStatus ? (
+        <>
+          <MapContainer />
+          <StatsContainer />
+        </>
+      ) : null}
       <ButtonContainer />
     </>
   ) : (

@@ -38,7 +38,7 @@ export function RouteFormContainer() {
 
   function tripStartHandle(e) {
     setTripStart(e.target.value);
-
+    // console.log(e.target.value);
     dispatch({
       type: 'updateCurrentTripStart',
       tripStart: e.target.value,
@@ -47,7 +47,7 @@ export function RouteFormContainer() {
 
   function tripEndHandle(e) {
     setTripEnd(e.target.value);
-
+    // console.log(e.target.value);
     dispatch({
       type: 'updateCurrentTripEnd',
       tripEnd: e.target.value,

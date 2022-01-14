@@ -11,7 +11,7 @@ export function ButtonContainer() {
   const { tripStart } = useSelector((state) => state);
   const { tripEnd } = useSelector((state) => state);
   const dispatch = useDispatch();
-  const [routeDataLoaded, setRouteDataLoaded] = useState(false);
+  // const [routeDataLoaded, setRouteDataLoaded] = useState(false);
 
   const getPathKm = (data) => {
     // console.log(data[14].distance);
@@ -56,6 +56,16 @@ export function ButtonContainer() {
     // console.log(Date.parse(data[0].end.time));
   };
 
+  const getRoutePathCoordinates = (path) => {
+    const coords = path.map((item) => item.decoded_route.points);
+    const coords2 = coords.reduce((accum, next) => accum.concat(next), []);
+    // console.log(coords2);
+    dispatch({
+      type: 'updateRoutePathCoordinates',
+      routePathCoordinates: coords2,
+    });
+  };
+
   const getRoutePath = (data) => {
     const path = data.filter((item) => item.type === 'route');
 
@@ -67,6 +77,7 @@ export function ButtonContainer() {
     getPathKm(path);
     getTimeDrove(path);
     getTimeMean(path);
+    getRoutePathCoordinates(path);
   };
 
   function buttonHandler() {
@@ -76,33 +87,30 @@ export function ButtonContainer() {
     // const api = `${routeDataApi}&unit_id=${unitId}&include=polyline&from=${from}&till=${till}`;
     const api = `${routeDataApi}&unit_id=${unitId}&include=decoded_route&from=${from}&till=${till}`;
 
-    setRouteDataLoaded(false);
+    // setRouteDataLoaded(false);
 
     fetch(api)
       .then((response) => response.json())
       .then((data) => {
+        // console.log(data);
         const routesData = data.data.units[0].routes;
+
         dispatch({
           type: 'updateRouteData',
           routeData: routesData,
         });
-        setRouteDataLoaded(true);
+
+        dispatch({
+          type: 'updateRouteDataLoadedStatus',
+          routeDataLoadedStatus: true,
+        });
+
         getRoutePath(routesData);
       })
       .catch((error) => {
         console.log(error);
       });
   }
-
-  // routePath
-  // [
-  //   { lat: 37.772, lng: -122.214 },
-  //   { lat: 21.291, lng: -157.821 },
-  //   { lat: -18.142, lng: 178.431 },
-  //   { lat: -27.467, lng: 153.027 },
-  // ]
-  // pointStart
-  // pointEnd
 
   return (
     <Button>

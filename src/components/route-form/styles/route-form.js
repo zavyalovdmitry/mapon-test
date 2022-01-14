@@ -48,6 +48,7 @@ export const Select = styled.select`
   font-size: 14px;
   line-height: 19px;
   color: #384045;
+  padding-left: 7px;
 `;
 
 export const Date = styled.input`
@@ -56,6 +57,7 @@ export const Date = styled.input`
   box-sizing: border-box;
   border-radius: 3px;
   width: 186px;
+  padding-left: 10px;
   height: 32px;
   font-family: MuseoSansCyrl-300;
   font-size: 14px;
