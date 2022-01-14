@@ -4,12 +4,9 @@ import { Stats } from '../components';
 
 export function StatsContainer() {
   const distance = useSelector((state) => state.pathKm);
-  const timeDrove = useSelector((state) => state.timeDrove);
-  const timeMean = useSelector((state) => state.timeMean);
+  const { timeDrove, timeMean } = useSelector((state) => state);
 
   const timeFormat = (ms) => {
-    // const milliseconds = Math.floor((ms % 1000) / 100);
-    // const seconds = Math.floor((ms / 1000) % 60);
     const minutes = Math.floor((ms / (1000 * 60)) % 60);
     const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
 

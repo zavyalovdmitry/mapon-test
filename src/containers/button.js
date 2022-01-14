@@ -1,15 +1,14 @@
 /* eslint-disable no-nested-ternary */
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '../components';
 import { routeDataApi } from '../lib/api';
 
 export function ButtonContainer() {
-  const { unitId } = useSelector((state) => state);
-  const { tripStart } = useSelector((state) => state);
-  const { tripEnd } = useSelector((state) => state);
+  const [firstLaunch, setFirstLaunch] = useState(true);
+  const { unitId, tripStart, tripEnd, routeDataLoadedStatus, routePath } =
+    useSelector((state) => state);
   const dispatch = useDispatch();
-  const { routeDataLoadedStatus } = useSelector((state) => state);
 
   const getPathKm = (data) => {
     const distance = Math.ceil(
@@ -85,6 +84,8 @@ export function ButtonContainer() {
 
     const api = `${routeDataApi}&unit_id=${unitId}&include=decoded_route&from=${from}&till=${till}`;
 
+    setFirstLaunch(false);
+
     dispatch({
       type: 'updateRouteDataLoadedStatus',
       routeDataLoadedStatus: false,
@@ -113,7 +114,7 @@ export function ButtonContainer() {
         className={unitId ? 'active' : 'inactive'}
         onClick={() => (unitId ? buttonHandler() : null)}
       >
-        {!unitId
+        {firstLaunch
           ? 'Generate'
           : routeDataLoadedStatus
           ? 'Generate'

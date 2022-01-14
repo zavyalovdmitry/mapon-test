@@ -8,7 +8,7 @@ export function RouteFormContainer() {
   const dispatch = useDispatch();
   const vehicle = useSelector((state) => state.carData);
   const [currentVehicle, setCurrentVehicle] = useState(0);
-  const dateLimit = 31 * 24 * 60 * 60 * 1000;
+  const dateLimit = 30 * 24 * 60 * 60 * 1000;
 
   function formatDate(dateIso) {
     const date = new Date(dateIso);
@@ -19,12 +19,6 @@ export function RouteFormContainer() {
   }
 
   const [fromMin, setFromMin] = useState(
-    formatDate(vehicle[currentVehicle].created_at)
-  );
-  const [fromMax, setFromMax] = useState(
-    formatDate(vehicle[currentVehicle].last_update)
-  );
-  const [toMin, setToMin] = useState(
     formatDate(vehicle[currentVehicle].created_at)
   );
   const [toMax, setToMax] = useState(

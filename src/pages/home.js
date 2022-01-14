@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import Loader from 'react-loader-spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import { HeaderContainer } from '../containers/header';
 import { RouteFormContainer } from '../containers/route-form';
@@ -24,7 +23,7 @@ export function Home() {
         setCarDataLoaded(true);
       })
       .catch((error) => {
-        console.log(error.message);
+        console.log(error);
       });
   }, []);
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 import { createStore, applyMiddleware, compose } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+// import { composeWithDevTools } from 'redux-devtools-extension';
 
 const INITIAL_STATE = {
   carData: [],
@@ -8,7 +8,7 @@ const INITIAL_STATE = {
   unitId: null,
   tripStart: 0,
   tripEnd: 0,
-  routePath: 0,
+  routePath: null,
   pathKm: 0,
   routeDataLoadedStatus: false,
 };
@@ -83,6 +83,7 @@ const carDataMiddleware = (store) => (next) => (action) => {
 
 const middleware = applyMiddleware(carDataMiddleware);
 
-const composedEnhancer = compose(middleware, composeWithDevTools());
+// const composedEnhancer = compose(middleware, composeWithDevTools());
+const composedEnhancer = compose(middleware);
 
 export const store = createStore(reducer, INITIAL_STATE, composedEnhancer);

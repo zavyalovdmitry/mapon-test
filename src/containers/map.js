@@ -32,18 +32,12 @@ export function MapContainer() {
 
   const centerLat = latMax - (latMax - latMin) / 2;
   const centerLng = lngMax - (lngMax - lngMin) / 2;
-
-  // const centerLat =
-  //   path.reduce((accum, next) => accum + next.lat, 0) / path.length;
-  // const centerLng =
-  //   path.reduce((accum, next) => accum + next.lng, 0) / path.length;
-
   const containerW = 600;
   const containerH = 200;
 
   const containerStyle = {
-    width: `${containerW}px`, // lat
-    height: `${containerH}px`, // lng
+    width: `${containerW}px`,
+    height: `${containerH}px`,
   };
 
   const zoomX = Math.floor(
