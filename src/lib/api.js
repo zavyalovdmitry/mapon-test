@@ -1,7 +1,5 @@
-export const carDataApi =
-  'https://mapon.com/api/v1/unit/list.json?key=ed6dc5516f66531096e66628e84d10fd2371c87a';
+export const googleMapsApiKey = process.env.REACT_APP_GOOGLE_API_KEY;
+export const mapOnApiKey = process.env.REACT_APP_MAPON_API_KEY;
 
-export const routeDataApi =
-  'https://mapon.com/api/v1/route/list.json?key=ed6dc5516f66531096e66628e84d10fd2371c87a';
-
-export const googleMapsApiKey = 'AIzaSyD7zvy7VcdB-yOiSKCgb7l46IfKuV5BghA';
+export const carDataApi = `https://mapon.com/api/v1/unit/list.json?key=${mapOnApiKey}`;
+export const routeDataApi = `https://mapon.com/api/v1/route/list.json?key=${mapOnApiKey}`;

@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-undef */
-import React, { useState } from 'react';
+/* eslint-disable no-nested-ternary */
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '../components';
 import { routeDataApi } from '../lib/api';
@@ -11,15 +9,13 @@ export function ButtonContainer() {
   const { tripStart } = useSelector((state) => state);
   const { tripEnd } = useSelector((state) => state);
   const dispatch = useDispatch();
-  // const [routeDataLoaded, setRouteDataLoaded] = useState(false);
+  const { routeDataLoadedStatus } = useSelector((state) => state);
 
   const getPathKm = (data) => {
-    // console.log(data[14].distance);
     const distance = Math.ceil(
       data.reduce((accum, next) => accum + next.distance, 0) / 1000
     );
 
-    // console.log(distance);
     dispatch({
       type: 'updatePathKm',
       pathKm: distance,
@@ -32,12 +28,11 @@ export function ButtonContainer() {
         accum + (Date.parse(next.end.time) - Date.parse(next.start.time)),
       0
     );
-    // console.log(timeDrove / 1000 / 60 / 60);
+
     dispatch({
       type: 'updateTimeDrove',
       timeDrove,
     });
-    // console.log(Date.parse(data[0].end.time));
   };
 
   const getTimeMean = (data) => {
@@ -53,16 +48,20 @@ export function ButtonContainer() {
       type: 'updateTimeMean',
       timeMean,
     });
-    // console.log(Date.parse(data[0].end.time));
   };
 
   const getRoutePathCoordinates = (path) => {
     const coords = path.map((item) => item.decoded_route.points);
     const coords2 = coords.reduce((accum, next) => accum.concat(next), []);
-    // console.log(coords2);
+
     dispatch({
       type: 'updateRoutePathCoordinates',
       routePathCoordinates: coords2,
+    });
+
+    dispatch({
+      type: 'updateRouteDataLoadedStatus',
+      routeDataLoadedStatus: true,
     });
   };
 
@@ -84,25 +83,21 @@ export function ButtonContainer() {
     const from = `${tripStart}T00:00:00Z`;
     const till = `${tripEnd}T23:59:59Z`;
 
-    // const api = `${routeDataApi}&unit_id=${unitId}&include=polyline&from=${from}&till=${till}`;
     const api = `${routeDataApi}&unit_id=${unitId}&include=decoded_route&from=${from}&till=${till}`;
 
-    // setRouteDataLoaded(false);
+    dispatch({
+      type: 'updateRouteDataLoadedStatus',
+      routeDataLoadedStatus: false,
+    });
 
     fetch(api)
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data);
         const routesData = data.data.units[0].routes;
 
         dispatch({
           type: 'updateRouteData',
           routeData: routesData,
-        });
-
-        dispatch({
-          type: 'updateRouteDataLoadedStatus',
-          routeDataLoadedStatus: true,
         });
 
         getRoutePath(routesData);
@@ -114,7 +109,16 @@ export function ButtonContainer() {
 
   return (
     <Button>
-      <Button.Link onClick={() => buttonHandler()}>Generate</Button.Link>
+      <Button.Link
+        className={unitId ? 'active' : 'inactive'}
+        onClick={() => (unitId ? buttonHandler() : null)}
+      >
+        {!unitId
+          ? 'Generate'
+          : routeDataLoadedStatus
+          ? 'Generate'
+          : 'Loading...'}
+      </Button.Link>
     </Button>
   );
 }

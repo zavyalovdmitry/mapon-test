@@ -27,16 +27,19 @@ export const Link = styled.a`
   line-height: 16px;
   text-transform: uppercase;
   color: #ffffff;
-  cursor: pointer;
   transition: 0.5s;
   box-sizing: border-box;
 
-  &:hover {
+  &.active {
+    cursor: pointer;
+  }
+
+  &.active:hover {
     opacity: 0.8;
     transition: 0.5s;
   }
 
-  &:active {
+  &.active:active {
     transition: 0s;
     background: #ffffff;
     color: #98ca02;

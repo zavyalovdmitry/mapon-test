@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   GoogleMap,
   LoadScript,
@@ -6,25 +6,54 @@ import {
   Marker,
 } from '@react-google-maps/api';
 import { useSelector } from 'react-redux';
-// import GoogleMapReact from 'google-map-react';
-// import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import { RouteMap } from '../components';
-// import dummap from '../dummap.png';
 import { googleMapsApiKey } from '../lib/api';
 import pin from '../pin.png';
 
 export function MapContainer() {
   const path = useSelector((state) => state.routePathCoordinates);
 
-  const centerLat =
-    path.reduce((accum, next) => accum + next.lat, 0) / path.length;
-  const centerLng =
-    path.reduce((accum, next) => accum + next.lng, 0) / path.length;
+  const latMin = Math.min.apply(
+    null,
+    path.map((item) => item.lat)
+  );
+  const latMax = Math.max.apply(
+    null,
+    path.map((item) => item.lat)
+  );
+  const lngMin = Math.min.apply(
+    null,
+    path.map((item) => item.lng)
+  );
+  const lngMax = Math.max.apply(
+    null,
+    path.map((item) => item.lng)
+  );
+
+  const centerLat = latMax - (latMax - latMin) / 2;
+  const centerLng = lngMax - (lngMax - lngMin) / 2;
+
+  // const centerLat =
+  //   path.reduce((accum, next) => accum + next.lat, 0) / path.length;
+  // const centerLng =
+  //   path.reduce((accum, next) => accum + next.lng, 0) / path.length;
+
+  const containerW = 600;
+  const containerH = 200;
 
   const containerStyle = {
-    width: '600px',
-    height: '200px',
+    width: `${containerW}px`, // lat
+    height: `${containerH}px`, // lng
   };
+
+  const zoomX = Math.floor(
+    Math.log(containerW / (latMax - latMin)) / Math.log(2)
+  );
+  const zoomY = Math.floor(
+    Math.log(containerH / (lngMax - lngMin)) / Math.log(2)
+  );
+
+  const zoom = Math.min(zoomX, zoomY);
 
   const center = {
     lat: centerLat,
@@ -58,13 +87,12 @@ export function MapContainer() {
 
   return (
     <RouteMap>
-      {/* <RouteMap.Map src={dummap} /> */}
       <RouteMap.Map>
         <LoadScript googleMapsApiKey={googleMapsApiKey}>
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
-            zoom={10}
+            zoom={zoom}
             options={mapOptions}
           >
             <Polyline path={path} options={polylineOptions} />

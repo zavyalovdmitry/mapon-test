@@ -1,4 +1,3 @@
-/* eslint-disable prefer-template */
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Stats } from '../components';
@@ -9,16 +8,12 @@ export function StatsContainer() {
   const timeMean = useSelector((state) => state.timeMean);
 
   const timeFormat = (ms) => {
-    const milliseconds = Math.floor((ms % 1000) / 100);
-    let seconds = Math.floor((ms / 1000) % 60);
-    let minutes = Math.floor((ms / (1000 * 60)) % 60);
-    let hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+    // const milliseconds = Math.floor((ms % 1000) / 100);
+    // const seconds = Math.floor((ms / 1000) % 60);
+    const minutes = Math.floor((ms / (1000 * 60)) % 60);
+    const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
 
-    hours = hours < 10 ? '0' + hours : hours;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-
-    return hours + 'h ' + minutes + 'm';
+    return `${hours}h ${minutes}m`;
   };
 
   return (

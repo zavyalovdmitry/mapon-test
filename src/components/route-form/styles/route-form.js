@@ -26,6 +26,8 @@ export const Text = styled.p`
   line-height: 19px;
   color: #384045;
   width: 30%;
+  margin-top: 10px;
+  margin-right: 6px;
 
   &:first-of-type:after {
     content: '*';
@@ -33,7 +35,7 @@ export const Text = styled.p`
   }
 
   &:last-of-type {
-    margin-left: 30px;
+    margin-left: 25px;
   }
 `;
 
@@ -49,6 +51,8 @@ export const Select = styled.select`
   line-height: 19px;
   color: #384045;
   padding-left: 7px;
+  margin-top: 5px;
+  outline: none;
 `;
 
 export const Date = styled.input`
@@ -63,9 +67,11 @@ export const Date = styled.input`
   font-size: 14px;
   line-height: 19px;
   color: #384045;
+  margin-top: -10px;
+  outline: none;
 
   &:first-of-type {
-    margin-left: 30%;
+    margin-left: 31%;
     margin-right: 8px;
   }
 `;

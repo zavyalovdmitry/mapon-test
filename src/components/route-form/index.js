@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-undef */
 import React from 'react';
 import { Form, Title, Text, Select, Date } from './styles/route-form';
 

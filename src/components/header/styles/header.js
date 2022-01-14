@@ -5,7 +5,6 @@ export const Container = styled.div`
   padding: 26px 0;
   display: flex;
   justify-content: center;
-
   box-sizing: border-box;
 `;
 

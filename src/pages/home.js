@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-expressions */
 import React, { useEffect, useState } from 'react';
+// import Loader from 'react-loader-spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import { HeaderContainer } from '../containers/header';
 import { RouteFormContainer } from '../containers/route-form';
@@ -41,6 +41,6 @@ export function Home() {
       <ButtonContainer />
     </>
   ) : (
-    <p>loading...</p>
+    <p>Loading...</p>
   );
 }
