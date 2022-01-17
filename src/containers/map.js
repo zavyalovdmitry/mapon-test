@@ -5,13 +5,16 @@ import {
   Polyline,
   Marker,
 } from '@react-google-maps/api';
-import { useSelector } from 'react-redux';
 import { RouteMap } from '../components';
-import { googleMapsApiKey } from '../lib/api';
+import { GOOGLE_API_KEY } from '../lib/api';
 import pin from '../pin.png';
+import { MAP_OPTIONS, POLYLINE_OPTIONS } from '../constants';
 
-export function MapContainer() {
-  const path = useSelector((state) => state.routePathCoordinates);
+export function MapContainer({ routesData }) {
+  const data = routesData.routes;
+  const routes = data.filter((item) => item.type === 'route');
+  const pathData = routes.map((item) => item.decoded_route.points);
+  const path = pathData.reduce((accum, next) => accum.concat(next), []);
 
   const latMin = Math.min.apply(
     null,
@@ -54,47 +57,29 @@ export function MapContainer() {
     lng: centerLng,
   };
 
-  const mapOptions = {
-    zoomControl: false,
-    scaleControl: false,
-    streetViewControl: false,
-    mapTypeControl: false,
-    fullscreenControl: false,
-  };
-
-  const polylineOptions = {
-    strokeColor: '#39B0FA',
-    strokeOpacity: 0.8,
-    strokeWeight: 4,
-    fillColor: '#FF0000',
-    fillOpacity: 0.35,
-    clickable: false,
-    draggable: false,
-    editable: false,
-    visible: true,
-    radius: 30000,
-    zIndex: 1,
-  };
-
   const markerStartPosition = path[0];
   const markerEndPosition = path[path.length - 1];
 
   return (
     <RouteMap>
-      <RouteMap.Map>
-        <LoadScript googleMapsApiKey={googleMapsApiKey}>
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={zoom}
-            options={mapOptions}
-          >
-            <Polyline path={path} options={polylineOptions} />
-            <Marker position={markerStartPosition} icon={pin} />
-            <Marker position={markerEndPosition} icon={pin} />
-          </GoogleMap>
-        </LoadScript>
-      </RouteMap.Map>
+      {path.length ? (
+        <RouteMap.Map>
+          <LoadScript googleMapsApiKey={GOOGLE_API_KEY}>
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={center}
+              zoom={zoom}
+              options={MAP_OPTIONS}
+            >
+              <Polyline path={path} options={POLYLINE_OPTIONS} />
+              <Marker position={markerStartPosition} icon={pin} />
+              <Marker position={markerEndPosition} icon={pin} />
+            </GoogleMap>
+          </LoadScript>
+        </RouteMap.Map>
+      ) : (
+        <p>No data available for this period</p>
+      )}
     </RouteMap>
   );
 }

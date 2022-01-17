@@ -1,14 +1,14 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable prefer-template */
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import { RouteForm } from '../components';
+import { DATE_LIMIT } from '../constants';
 
-export function RouteFormContainer() {
-  const dispatch = useDispatch();
-  const vehicle = useSelector((state) => state.carData);
+export function FormContainer({ vehicles, routeParams, setRouteParams }) {
   const [currentVehicle, setCurrentVehicle] = useState(0);
-  const dateLimit = 30 * 24 * 60 * 60 * 1000;
+  const { tripStart, tripEnd } = routeParams;
 
   function formatDate(dateIso) {
     const date = new Date(dateIso);
@@ -18,65 +18,49 @@ export function RouteFormContainer() {
     ).slice(-2)}-${('0' + date.getDate().toString()).slice(-2)}`;
   }
 
-  const [fromMin, setFromMin] = useState(
-    formatDate(vehicle[currentVehicle].created_at)
-  );
-  const [toMax, setToMax] = useState(
-    formatDate(vehicle[currentVehicle].last_update)
-  );
-
-  const [tripStart, setTripStart] = useState(
-    formatDate(vehicle[currentVehicle].last_update)
-  );
-  const [tripEnd, setTripEnd] = useState(tripStart);
-
   useEffect(() => {
-    dispatch({
-      type: 'updateCurrentTripStart',
-      tripStart,
-    });
-
-    dispatch({
-      type: 'updateCurrentTripEnd',
-      tripEnd,
-    });
+    const tripStart = formatDate(vehicles[currentVehicle].last_update);
+    setRouteParams({ ...routeParams, tripStart, tripEnd: tripStart });
   }, []);
 
-  function currentVehicleHandle(e) {
-    setCurrentVehicle(e.target.value);
+  const [fromMin, setFromMin] = useState(
+    formatDate(vehicles[currentVehicle].created_at)
+  );
+  const [toMax, setToMax] = useState(
+    formatDate(vehicles[currentVehicle].last_update)
+  );
 
-    dispatch({
-      type: 'updateCurrentUnitId',
-      unitId: vehicle[e.target.value].unit_id,
-    });
+  useEffect(() => {
+    setFromMin(formatDate(vehicles[currentVehicle].created_at));
+    setToMax(formatDate(vehicles[currentVehicle].last_update));
+  }, [currentVehicle]);
+
+  function currentVehicleHandle(e) {
+    const unitId = vehicles[e.target.value].unit_id;
+    setCurrentVehicle(e.target.value);
+    setRouteParams({ ...routeParams, unitId });
   }
 
   function tripStartHandle(e) {
     const mSecs = Date.parse(e.target.value);
-    Date.parse(tripEnd) - mSecs > dateLimit
-      ? setTripEnd(formatDate(new Date(mSecs + dateLimit)))
-      : null;
-
-    setTripStart(e.target.value);
-
-    dispatch({
-      type: 'updateCurrentTripStart',
-      tripStart: e.target.value,
-    });
+    Date.parse(tripEnd) - mSecs > DATE_LIMIT
+      ? setRouteParams({
+          ...routeParams,
+          tripEnd: formatDate(new Date(mSecs + DATE_LIMIT)),
+          tripStart: e.target.value,
+        })
+      : setRouteParams({ ...routeParams, tripStart: e.target.value });
   }
 
   function tripEndHandle(e) {
     const mSecs = Date.parse(e.target.value);
-    mSecs - Date.parse(tripStart) > dateLimit
-      ? setTripStart(formatDate(new Date(mSecs - dateLimit)))
-      : null;
-
-    setTripEnd(e.target.value);
-
-    dispatch({
-      type: 'updateCurrentTripEnd',
-      tripEnd: e.target.value,
-    });
+    mSecs - Date.parse(tripStart) > DATE_LIMIT
+      ? setRouteParams({
+          ...routeParams,
+          tripStart: formatDate(new Date(mSecs - DATE_LIMIT)),
+          tripEnd: e.target.value,
+        })
+      : setRouteParams({ ...routeParams, tripEnd: e.target.value });
   }
 
   return (
@@ -92,7 +76,7 @@ export function RouteFormContainer() {
           <option value="Select vehicle" disabled hidden>
             Select vehicle
           </option>
-          {vehicle.map((item, index) => (
+          {vehicles.map((item, index) => (
             <option key={item.unit_id} value={index}>
               {item.number}
             </option>

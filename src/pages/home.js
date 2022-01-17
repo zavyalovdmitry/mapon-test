@@ -1,45 +1,66 @@
+/* eslint-disable no-shadow */
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { HeaderContainer } from '../containers/header';
-import { RouteFormContainer } from '../containers/route-form';
+import { FormContainer } from '../containers/form';
 import { MapContainer } from '../containers/map';
 import { StatsContainer } from '../containers/stats';
 import { ButtonContainer } from '../containers/button';
-import { carDataApi } from '../lib/api';
+import { fetchVehicles, fetchRoutes } from '../redux';
 
-export function Home() {
-  const [carDataLoaded, setCarDataLoaded] = useState(false);
-  const { routeDataLoadedStatus } = useSelector((state) => state);
-  const dispatch = useDispatch();
+function Home({ vehiclesData, fetchVehicles, routesData }) {
+  const [routeParams, setRouteParams] = useState({
+    unitId: '',
+    tripStart: '',
+    tripEnd: '',
+  });
 
   useEffect(() => {
-    fetch(carDataApi)
-      .then((response) => response.json())
-      .then((data) => {
-        dispatch({
-          type: 'getCarData',
-          carData: data.data.units,
-        });
-        setCarDataLoaded(true);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    fetchVehicles();
   }, []);
 
-  return carDataLoaded ? (
+  console.log(routeParams);
+
+  return vehiclesData.loading ? (
+    <h2>Loading...</h2>
+  ) : (
     <>
       <HeaderContainer />
-      <RouteFormContainer />
-      {routeDataLoadedStatus ? (
-        <>
-          <MapContainer />
-          <StatsContainer />
-        </>
+      {vehiclesData.vehicles.data ? (
+        <FormContainer
+          vehicles={vehiclesData.vehicles.data.units}
+          routeParams={routeParams}
+          setRouteParams={setRouteParams}
+        />
       ) : null}
-      <ButtonContainer />
+
+      {routesData.loading ? null : (
+        <>
+          {routesData.routes.data ? (
+            <>
+              <MapContainer routesData={routesData.routes.data.units[0]} />
+              <StatsContainer
+                routesData={routesData.routes.data.units[0]}
+                routeParams={routeParams}
+              />
+            </>
+          ) : null}
+        </>
+      )}
+
+      <ButtonContainer routesData={routesData} routeParams={routeParams} />
     </>
-  ) : (
-    <p>Loading...</p>
   );
 }
+
+const mapStateToProps = (state) => ({
+  vehiclesData: state.vehicles,
+  routesData: state.routes,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchVehicles: () => dispatch(fetchVehicles()),
+  fetchRoutes: () => dispatch(fetchRoutes()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Form, Title, Text, Select, Date } from './styles/route-form';
+import { Container, Title, Text, Select, Date } from './styles/form';
 
 export default function RouteForm({ children, ...restProps }) {
-  return <Form {...restProps}>{children}</Form>;
+  return <Container {...restProps}>{children}</Container>;
 }
 
 RouteForm.Title = function RouteFormTitle({ children, ...restProps }) {

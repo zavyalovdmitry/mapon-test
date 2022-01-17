@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 
-export const Form = styled.form`
+export const Container = styled.form`
   max-width: 600px;
   padding: 40px 24px;
   background: #ffffff;
