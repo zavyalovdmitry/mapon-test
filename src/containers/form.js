@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable object-shorthand */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-expressions */
@@ -43,7 +44,13 @@ export function FormContainer({ vehicles, routeParams, setRouteParams }) {
 
   function tripStartHandle(e) {
     const mSecs = Date.parse(e.target.value);
-    Date.parse(tripEnd) - mSecs > DATE_LIMIT
+    mSecs > Date.parse(tripEnd)
+      ? setRouteParams({
+          ...routeParams,
+          tripEnd: e.target.value,
+          tripStart: e.target.value,
+        })
+      : Date.parse(tripEnd) - mSecs > DATE_LIMIT
       ? setRouteParams({
           ...routeParams,
           tripEnd: formatDate(new Date(mSecs + DATE_LIMIT)),
@@ -54,7 +61,13 @@ export function FormContainer({ vehicles, routeParams, setRouteParams }) {
 
   function tripEndHandle(e) {
     const mSecs = Date.parse(e.target.value);
-    mSecs - Date.parse(tripStart) > DATE_LIMIT
+    mSecs < Date.parse(tripStart)
+      ? setRouteParams({
+          ...routeParams,
+          tripEnd: e.target.value,
+          tripStart: e.target.value,
+        })
+      : mSecs - Date.parse(tripStart) > DATE_LIMIT
       ? setRouteParams({
           ...routeParams,
           tripStart: formatDate(new Date(mSecs - DATE_LIMIT)),
